@@ -1,0 +1,38 @@
+﻿{
+	"fields": [
+		{
+			"type": "text",
+			"key": "firstname",
+			"label": "First Name",
+			"validation": ["required"],
+			"validation-msg": "Please enter user name"
+		},
+		
+		{
+			"type": "text",
+			"key": "phone",
+			"label": "Phone",
+			"validation": ["required", "numbers-only"],
+			"validation-msg": "Please enter valid phone"
+		},
+		
+		{
+			"type": "dropdown-backend",
+			"key": "country",
+			"label": "Country",
+			"validation": ["required"],
+			"validation-msg": "Please enter user name",
+			
+			"factory-key": "countries"
+		},
+		{
+			"type": "dropdown-eden",
+			"key": "presp",
+			"label": "Area of Expertise",
+			"validation": ["required"],
+			"validation-msg": "Please enter user name",
+			
+			"webservice-url": "http://eden.intranet/services/"
+		}
+	]
+}

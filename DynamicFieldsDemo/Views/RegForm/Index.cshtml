@@ -1,0 +1,28 @@
+﻿@model IEnumerable<DynamicFieldsDemo.Code.ViewModels.AbstractFieldViewModel>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Registration form</h2>
+
+@using( Html.BeginForm("Post", "RegForm", FormMethod.Post))
+{ 
+
+    <div class="container">
+        @foreach (var field in Model) 
+        { 
+            @Html.Partial(field.ViewName, field);
+        }
+        <div class="col-sm-12">
+            <input type="submit" class="btn btn-block btn-primary btn-" /> 
+        </div>
+    </div>
+
+}
+
+
+
+
+

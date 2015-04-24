@@ -1,0 +1,20 @@
+﻿{
+	"Panels": [
+        {
+          "Title": "Personal Details",
+          "Fields": [
+		  {
+			"fieldKey": "firstName",
+			"validation": ["optional"]
+		  }, 
+		  {
+			"fieldKey": "lastName"
+			"validation": []
+		  }]
+        },
+        {
+          "Title": "Address",
+          "Fields": ["address1", "address2", "city"]
+        }
+      ]
+}

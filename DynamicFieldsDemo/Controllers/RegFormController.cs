@@ -32,12 +32,14 @@ namespace DynamicFieldsDemo.Controllers
         // GET: RegForm
         public ActionResult Index(string formId)
         {
-            var formFields = _regFormLogic.GetFields(formId);
+            var viewModel = new DynamicFormViewModel();
 
-            var viewModels = formFields.Select(GetViewModelFromField).ToList();
-            viewModels.ForEach(vm => vm.LoadExtraViewData(_fieldDataVisitor));
+            //var formFields = _regFormLogic.GetFields(formId);
 
-            return View(viewModels);
+            //var viewModels = formFields.Select(GetViewModelFromField).ToList();
+            //viewModels.ForEach(vm => vm.LoadExtraViewData(_fieldDataVisitor));
+
+            return View(viewModel);
         }
 
         [HttpPost]
@@ -52,16 +54,22 @@ namespace DynamicFieldsDemo.Controllers
         }
 
 
-        private AbstractFieldViewModel GetViewModelFromField(AbstractField field)
+        public static AbstractFieldViewModel GetViewModelFromField(AbstractField field, Dictionary<string, string> storage)
         {
-            if (field is TextField)
-                return Mapper.Map<TextFieldViewModel>(field);
-            if (field is DropdownBackendField)
-                return Mapper.Map<DropdownBackendFieldViewModel>(field);
-            if (field is DropdownEdenField)
-                return Mapper.Map<DropdownEdenFieldViewModel>(field);
+            AbstractFieldViewModel vm = null;
 
-            throw new Exception("not supported");
+            if (field is TextField)
+                vm = Mapper.Map<TextFieldViewModel>(field);
+            if (field is DropdownBackendField)
+                vm = Mapper.Map<DropdownBackendFieldViewModel>(field);
+            if (field is DropdownEdenField)
+                vm = Mapper.Map<DropdownEdenFieldViewModel>(field);
+
+            if (vm == null)
+                throw new Exception("not supported");
+
+            vm.Storage = storage;
+            return vm;
         }
 
     }

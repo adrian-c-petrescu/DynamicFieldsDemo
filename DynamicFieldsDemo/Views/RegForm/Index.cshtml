@@ -1,4 +1,6 @@
-﻿@model IEnumerable<DynamicFieldsDemo.Code.ViewModels.AbstractFieldViewModel>
+﻿@using System.Web.Mvc.Html
+@model DynamicFieldsDemo.Code.ViewModels.DynamicFormViewModel
+
 
 @{
     ViewBag.Title = "Index";
@@ -11,12 +13,12 @@
 { 
 
     <div class="container">
-        @foreach (var field in Model) 
+        @foreach (var field in Model.FieldViewModels) 
         { 
             @Html.Partial(field.ViewName, field);
         }
         <div class="col-sm-12">
-            <input type="submit" class="btn btn-block btn-primary btn-" /> 
+            <input type="submit" class="btn btn-block btn-primary" /> 
         </div>
     </div>
 

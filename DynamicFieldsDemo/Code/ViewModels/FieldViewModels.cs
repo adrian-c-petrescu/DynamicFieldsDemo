@@ -14,6 +14,14 @@ namespace DynamicFieldsDemo.Code.ViewModels
         public string[] Validation { get; set; }
         public string ValidationMsg { get; set; }
 
+        public Dictionary<string, string> Storage { get; set; }
+
+        public string Value
+        {
+            get { return Storage[Key]; }
+            set { Storage[Key] = value; }
+        }
+
         public abstract string ViewName { get; }
         public abstract void LoadExtraViewData(IFieldDataVisitor fieldVisitor);
     }
@@ -21,7 +29,6 @@ namespace DynamicFieldsDemo.Code.ViewModels
     public class TextFieldViewModel : AbstractFieldViewModel
     {
         public override string ViewName { get { return "TextFieldView"; } }
-        
         public override void LoadExtraViewData(IFieldDataVisitor fieldVisitor) { }
     }
 

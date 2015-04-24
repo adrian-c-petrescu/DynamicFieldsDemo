@@ -24,12 +24,18 @@ namespace DynamicFieldsDemo.Code.ViewModels
 
         public abstract string ViewName { get; }
         public abstract void LoadExtraViewData(IFieldDataVisitor fieldVisitor);
+        public abstract bool Validate();
     }
 
     public class TextFieldViewModel : AbstractFieldViewModel
     {
         public override string ViewName { get { return "TextFieldView"; } }
         public override void LoadExtraViewData(IFieldDataVisitor fieldVisitor) { }
+
+        public override bool Validate()
+        {
+            throw new NotImplementedException();
+        }
     }
 
     public abstract class DropdownFieldViewModel : AbstractFieldViewModel
@@ -46,6 +52,11 @@ namespace DynamicFieldsDemo.Code.ViewModels
         {
             fieldVisitor.LoadBackendFieldData(this);
         }
+
+        public override bool Validate()
+        {
+            throw new NotImplementedException();
+        }
     }
 
     public class DropdownEdenFieldViewModel : DropdownFieldViewModel
@@ -55,6 +66,11 @@ namespace DynamicFieldsDemo.Code.ViewModels
         public override void LoadExtraViewData(IFieldDataVisitor fieldVisitor)
         {
             fieldVisitor.LoadEdenFieldData(this);
+        }
+
+        public override bool Validate()
+        {
+            throw new NotImplementedException();
         }
     }
 }

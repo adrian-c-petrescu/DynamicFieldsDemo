@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DynamicFieldsDemo.Code.Logic;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -14,8 +15,10 @@ namespace DynamicFieldsDemo.Code.ViewModels
         {
             var request = controllerContext.HttpContext.Request;
 
+			var formId = request.Form["formId"];
+
             //build the generic view model
-            var dynFormViewModel = new DynamicFormViewModel();
+            var dynFormViewModel = new DynamicFormViewModel(new ValidatorFactory(), formId);
 			dynFormViewModel.PopulateFromForm(request.Form);
 
 			//run validation

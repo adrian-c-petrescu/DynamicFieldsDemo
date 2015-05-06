@@ -124,7 +124,9 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Code\DocRepo\FieldContainerRepo.cs" />
     <Compile Include="Code\DocRepo\FormRepo.cs" />
+    <Compile Include="Code\Logic\CustomValidator.cs" />
     <Compile Include="Code\Logic\FieldDataVisitor.cs" />
+    <Compile Include="Code\Logic\ValidatorFactory.cs" />
     <Compile Include="Code\Logic\RegFormLogic.cs" />
     <Compile Include="Code\Model\FieldContainer.cs" />
     <Compile Include="Code\Model\Form.cs" />

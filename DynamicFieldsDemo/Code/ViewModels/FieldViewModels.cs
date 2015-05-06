@@ -1,4 +1,5 @@
-﻿using DynamicFieldsDemo.Code.Model;
+﻿using DynamicFieldsDemo.Code.Logic;
+using DynamicFieldsDemo.Code.Model;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -11,16 +12,21 @@ namespace DynamicFieldsDemo.Code.ViewModels
 {
     public abstract class AbstractFieldViewModel
 	{
-		#region Metadata
-		public string Type { get; set; }
-        public string Key { get; set; }
-        public string Label { get; set; }
-        public string[] Validation { get; set; }
-        public string ValidationMsg { get; set; }
+		#region dependencies
+		public AbstractField FieldMetadata { get; private set; }
+		protected List<CustomValidator> Validators { get; private set; }
 		#endregion
 
 		#region state
 		public string Value { get; set; }
+		#endregion
+
+		#region constructor
+		protected AbstractFieldViewModel(AbstractField fieldMetadata, IValidatorFactory validatorFactory)
+		{
+			FieldMetadata = fieldMetadata;
+			Validators = fieldMetadata.Validation.Select(vStr => validatorFactory.BuildValidator(vStr)).ToList();
+		}
 		#endregion
 
 		#region actions
@@ -29,25 +35,39 @@ namespace DynamicFieldsDemo.Code.ViewModels
 
 		public virtual void RunValidation(ModelStateDictionary modelStateDictionary)
 		{
-			if (string.IsNullOrEmpty(Value))
+			if(Validators.Any(v => !v.IsValid(Value)))
 			{
 				var modelState = new ModelState();
-				modelState.Errors.Add(ValidationMsg);
-
-				modelStateDictionary.Add(Key, modelState);
+				modelState.Errors.Add(FieldMetadata.ValidationMsg);
+				modelStateDictionary.Add(FieldMetadata.Key, modelState);
 			}
 		}
 
-		public abstract IDictionary<string, object> ValidationHtmlAttributes { get; }
+		public IDictionary<string, object> GetValidationHtmlAttributes()
+		{
+				var result = new Dictionary<string, object>();
+				if (Validators.Any())
+				{
+					result.Add("data-val", "true");
+
+					foreach (var validator in Validators)
+					{
+						validator.AddHtmlAttributes(result, FieldMetadata.ValidationMsg);
+					}
+				}
+
+				return result;
+		}
+		
 
 		public void LoadFormValue(NameValueCollection formData)
 		{
-			Value = formData[Key];
+			Value = formData[FieldMetadata.Key];
 		}
 
 		public override string ToString()
 		{
-			return string.Format("{0} = {1}", Key, Value);
+			return string.Format("{0} = {1}", FieldMetadata.Key, Value);
 		}
 		#endregion
 	}
@@ -57,61 +77,46 @@ namespace DynamicFieldsDemo.Code.ViewModels
         public override string ViewName { get { return "TextFieldView"; } }
         public override void LoadExtraViewData(IFieldDataVisitor fieldVisitor) { }
 
-		public override IDictionary<string, object> ValidationHtmlAttributes
+		public TextFieldViewModel(AbstractField fieldMetadata, IValidatorFactory validatorFactory)
+			: base(fieldMetadata, validatorFactory)
 		{
-			get
-			{
-				var result = new Dictionary<string, object>();
-				result.Add("data-val", "true");
-
-				if (Validation.Contains("required"))
-				{
-					result.Add("data-val-required", ValidationMsg);
-				}
-				if (Validation.Contains("minLength"))
-				{
-					result.Add("data-val-minlength", ValidationMsg);
-					result.Add("data-val-minlength-min", "5");
-				}
-				if (Validation.Contains("maxLength"))
-				{
-					result.Add("data-val-maxlength", ValidationMsg);
-					result.Add("data-val-maxlength-max", "50");
-				}
-
-				return result;
-			}
 		}
-
     }
 
     public abstract class DropdownFieldViewModel : AbstractFieldViewModel
     {
+		protected DropdownFieldViewModel(AbstractField fieldMetadata, IValidatorFactory validatorFactory)
+			: base(fieldMetadata, validatorFactory)
+		{
+		}
+
         public IEnumerable<SelectListItem> SelectListItems
         {
             get
             {
-                return Options
-                    .Select(o => new SelectListItem
-                    {
-                        Text = o,
-                        Value = o
-                    })
+                return new[] { new SelectListItem { Text = string.Format("Please select {0} ...", FieldMetadata.Label), Value = "" } }
+					.Concat(Options
+						.Select(o => new SelectListItem
+						{
+							Text = o,
+							Value = o
+						}))
                     .ToArray();
             }
         }
         public string[] Options { get; set; }
         public override string ViewName { get { return "DropdownFieldView"; } }
-
-		public override IDictionary<string, object> ValidationHtmlAttributes
-		{
-			get { return new Dictionary<string, object>(); }
-		}
     }
 
     public class DropdownBackendFieldViewModel : DropdownFieldViewModel
     {
-        public string FactoryKey { get; set; }
+        public string FactoryKey { get; private set; }
+
+		public DropdownBackendFieldViewModel(DropdownBackendField fieldMetadata, IValidatorFactory validatorFactory)
+			: base(fieldMetadata, validatorFactory)
+		{
+			FactoryKey = fieldMetadata.FactoryKey;
+		}
         
         public override void LoadExtraViewData(IFieldDataVisitor fieldVisitor)
         {
@@ -121,7 +126,14 @@ namespace DynamicFieldsDemo.Code.ViewModels
 
     public class DropdownEdenFieldViewModel : DropdownFieldViewModel
     {
-        public string WebserviceUrl { get; set; }
+        public string WebserviceUrl { get; private set; }
+
+		public DropdownEdenFieldViewModel(DropdownEdenField fieldMetadata, IValidatorFactory validatorFactory)
+			: base(fieldMetadata, validatorFactory)
+		{
+			WebserviceUrl = fieldMetadata.WebserviceUrl;
+		}
+
 
         public override void LoadExtraViewData(IFieldDataVisitor fieldVisitor)
         {

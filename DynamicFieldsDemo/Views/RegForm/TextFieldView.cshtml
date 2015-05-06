@@ -2,9 +2,9 @@
 @using DynamicFieldsDemo.Code.MvcExtensions
 
 <div class="col-sm-6">
-    <label>@Model.Label</label>
+    <label>@Model.FieldMetadata.Label</label>
     <div class="input-group input-group-lg">
         @Html.EditorWithCustomValidation(Model)
-        @Html.ValidationMessage(Model.Key)
+        @Html.ValidationMessage(Model.FieldMetadata.Key)
     </div>
 </div>

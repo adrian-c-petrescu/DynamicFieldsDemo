@@ -11,6 +11,7 @@
 
 @using( Html.BeginForm("Post", "RegForm", FormMethod.Post))
 { 
+	@Html.Hidden("formId", Model.FormId)
 
     <div class="container">
         @foreach (var field in Model.FieldViewModels) 

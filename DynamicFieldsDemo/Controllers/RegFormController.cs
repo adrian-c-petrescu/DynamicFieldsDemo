@@ -17,6 +17,7 @@ namespace DynamicFieldsDemo.Controllers
     {
         private readonly RegFormLogic _regFormLogic;
         private readonly FieldDataVisitor _fieldDataVisitor;
+		private readonly IValidatorFactory _validatorFactory;
         
 
         public RegFormController()
@@ -24,16 +25,13 @@ namespace DynamicFieldsDemo.Controllers
             //IOC
             _regFormLogic = new RegFormLogic(new FieldContainerRepo(), new FormRepo());
             _fieldDataVisitor = new FieldDataVisitor();
-            
-            Mapper.CreateMap<TextField, TextFieldViewModel>();
-            Mapper.CreateMap<DropdownBackendField, DropdownBackendFieldViewModel>();
-            Mapper.CreateMap<DropdownEdenField, DropdownEdenFieldViewModel>();
+			_validatorFactory = new ValidatorFactory();
         }
 
         // GET: RegForm
         public ActionResult Index(string formId)
         {           
-            var viewModel = new DynamicFormViewModel();
+            var viewModel = new DynamicFormViewModel(_validatorFactory, formId);
 
             foreach (var vm in viewModel.FieldViewModels)
                 vm.LoadExtraViewData(_fieldDataVisitor);
@@ -48,31 +46,10 @@ namespace DynamicFieldsDemo.Controllers
         {
 			if (!ModelState.IsValid)
 				return RedirectToAction("Index");
-				//return View(viewModel);
 
 			var model = viewModel.ToString();
 
-
             return View("Result", (object)model);
         }
-
-
-        public static AbstractFieldViewModel GetViewModelFromField(AbstractField field)
-        {
-            AbstractFieldViewModel vm = null;
-
-            if (field is TextField)
-                vm = Mapper.Map<TextFieldViewModel>(field);
-            if (field is DropdownBackendField)
-                vm = Mapper.Map<DropdownBackendFieldViewModel>(field);
-            if (field is DropdownEdenField)
-                vm = Mapper.Map<DropdownEdenFieldViewModel>(field);
-
-            if (vm == null)
-                throw new Exception("not supported");
-
-            return vm;
-        }
-
     }
 }

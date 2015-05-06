@@ -12,7 +12,7 @@ namespace DynamicFieldsDemo.Code.Util
     {
         protected override AbstractField Create(Type objectType, JObject jsonObject)
         {
-            string typeName = jsonObject["type"].Value<string>();
+            string typeName = jsonObject["Type"].Value<string>();
 
             if (typeName == "text")
             {

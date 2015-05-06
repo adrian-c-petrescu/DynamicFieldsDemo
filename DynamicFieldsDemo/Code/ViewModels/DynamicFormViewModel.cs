@@ -15,15 +15,18 @@ namespace DynamicFieldsDemo.Code.ViewModels
     public class DynamicFormViewModel
     {
         public IEnumerable<AbstractFieldViewModel> FieldViewModels { get; private set; }
+		public string FormId { get; private set; }
 
-        public DynamicFormViewModel()
-        {   
+        public DynamicFormViewModel(IValidatorFactory validatorFactory, string formId)
+        {
+			FormId = formId;
+
             var fieldModels = new RegFormLogic(
                     new FieldContainerRepo(), new FormRepo())
-                .GetFields("123").ToList();
+                .GetFields(formId).ToList();
 
             FieldViewModels = fieldModels
-                .Select(f => RegFormController.GetViewModelFromField(f))
+                .Select(f => f.CreateViewModel(validatorFactory))
                 .ToArray();
         }
 

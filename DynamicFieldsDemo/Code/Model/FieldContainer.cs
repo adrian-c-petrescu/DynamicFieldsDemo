@@ -1,4 +1,6 @@
-﻿using Newtonsoft.Json;
+﻿using DynamicFieldsDemo.Code.Logic;
+using DynamicFieldsDemo.Code.ViewModels;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,42 +16,40 @@ namespace DynamicFieldsDemo.Code.Model
 
     public abstract class AbstractField
     {
-        [JsonProperty("type")]
         public string Type { get; set; }
-
-        [JsonProperty("key")]
         public string Key { get; set; }
-
-        [JsonProperty("label")]
         public string Label { get; set; }
-
-        [JsonProperty("validation")]
         public string[] Validation { get; set; }
-
-        [JsonProperty("validation-msg")]
         public string ValidationMsg { get; set; }
 
-        //public abstract string ViewName { get; }
+		public abstract AbstractFieldViewModel CreateViewModel(IValidatorFactory validatorFactory);
     }
 
     public class TextField : AbstractField
     {
-        //public override string ViewName { get { return "TextFieldView"; } }
+		public override AbstractFieldViewModel CreateViewModel(IValidatorFactory validatorFactory)
+		{
+			return new TextFieldViewModel(this, validatorFactory);
+		}
     }
 
     public class DropdownBackendField : AbstractField
     {
-        [JsonProperty("factory-key")]
         public string FactoryKey { get; set; }
 
-        //public override string ViewName { get { return "DropdownBackendFieldView"; } }
+		public override AbstractFieldViewModel CreateViewModel(IValidatorFactory validatorFactory)
+		{
+			return new DropdownBackendFieldViewModel(this, validatorFactory);
+		}
     }
 
     public class DropdownEdenField : AbstractField
     {
-        [JsonProperty("webservice-url")]
         public string WebserviceUrl { get; set; }
 
-        //public override string ViewName { get { return "DropdownEdenFieldView"; } }
+		public override AbstractFieldViewModel CreateViewModel(IValidatorFactory validatorFactory)
+		{
+			return new DropdownEdenFieldViewModel(this, validatorFactory);
+		}
     }
 }

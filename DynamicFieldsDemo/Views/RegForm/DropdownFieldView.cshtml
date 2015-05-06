@@ -3,12 +3,9 @@
 <div class="col-sm-6">
     <label>@Model.Label</label>
     <div class="input-group input-group-lg">
-        <select name="@Model.Key" class="form-control">
-            <option>Choose @Model.Label</option>
-            @foreach (var option in @Model.Options)
-            {
-                <option id="@option">@option</option>
-            }
-        </select>
+        @Html.DropDownList(Model.Key, Model.SelectListItems)
+
+@*        @Html.ValidationMessage(Model.Key, Model.ValidationMsg);*@
+
     </div>
 </div>

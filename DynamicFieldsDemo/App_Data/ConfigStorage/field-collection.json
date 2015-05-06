@@ -12,7 +12,7 @@
 			"type": "text",
 			"key": "phone",
 			"label": "Phone",
-			"validation": ["required", "numbers-only"],
+			"validation": ["required", "phone", "minlength", "maxlength"],
 			"validation-msg": "Please enter valid phone"
 		},
 		

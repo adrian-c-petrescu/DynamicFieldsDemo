@@ -129,15 +129,19 @@
     <Compile Include="Code\Model\FieldContainer.cs" />
     <Compile Include="Code\Model\Form.cs" />
     <Compile Include="Code\Model\IFieldDataVisitor.cs" />
+    <Compile Include="Code\MvcExtensions\MvcExtensions.cs" />
     <Compile Include="Code\Util\FieldConverter.cs" />
     <Compile Include="Code\Util\JsonCreationConverter.cs" />
     <Compile Include="Code\ViewModels\DynamicFormViewModel.cs" />
+    <Compile Include="Code\ViewModels\DynFormModelBinder.cs" />
     <Compile Include="Code\ViewModels\FieldViewModels.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\RegFormController.cs" />
+    <Compile Include="Controllers\StrongTypeController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\StrongViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -182,10 +186,10 @@
     <Content Include="Views\RegForm\TextFieldView.cshtml" />
     <Content Include="Views\RegForm\DropdownFieldView.cshtml" />
     <Content Include="Views\RegForm\Result.cshtml" />
+    <Content Include="Views\StrongType\Index.cshtml" />
+    <Content Include="Views\StrongType\Result.cshtml" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Models\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
     <Content Include="fonts\glyphicons-halflings-regular.ttf" />
@@ -212,6 +216,8 @@
           <DevelopmentServerPort>2849</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
           <IISUrl>http://localhost:2849/</IISUrl>
+          <OverrideIISAppRootUrl>True</OverrideIISAppRootUrl>
+          <IISAppRootUrl>http://localhost:2849/RegForm?formId=123</IISAppRootUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

@@ -21,38 +21,39 @@ namespace DynamicFieldsDemo
             BundleConfig.RegisterBundles(BundleTable.Bundles);
 
             //setup validation
-            DataAnnotationsModelValidatorProvider.AddImplicitRequiredAttributeForValueTypes = false;
-            ModelValidatorProviders.Providers.Add(
-                new FluentValidationModelValidatorProvider(new ValidatorFactory()));
+            //DataAnnotationsModelValidatorProvider.AddImplicitRequiredAttributeForValueTypes;
+			//ModelValidatorProviders.Providers.Add(rovider(new ValidatorFactory())
+			//	new CustomModelValidatorProvider()
+			//	//new FluentValidationModelValidatorP
+                
+			//	);
         }
 
-        private class ValidatorFactory : IValidatorFactory
-        {
 
-            public IValidator GetValidator(Type type)
-            {
-                if (type == typeof (DynamicFormViewModel))
-                {
-                    return new DynamicFormValidator();
-                }
+		//private class CustomModelValidatorProvider : ModelValidatorProvider
+		//{
+		//	public override IEnumerable<ModelValidator> GetValidators(ModelMetadata metadata, ControllerContext context)
+		//	{
+		//		return new ModelValidator[] { new DynamicFormValidator(metadata, context) };
+		//	}
+		//}
 
-                throw new NotImplementedException();
-            }
+		//private class DynamicFormValidator : ModelValidator
+		//{
+		//	public DynamicFormValidator(
+		//		ModelMetadata metadata,
+		//		ControllerContext controllerContext)
+		//		: base(metadata, controllerContext)
+		//	{
+		//	}
 
-            public IValidator<T> GetValidator<T>()
-            {
-                return (IValidator<T>) GetValidator(typeof (T));
-            }
-        }
+		//	public override IEnumerable<ModelValidationResult> Validate(
+		//		object container)
+		//	{
+		//		throw new NotImplementedException();
+		//	}
+		//}
 
-        private class DynamicFormValidator : AbstractValidator<DynamicFormViewModel>
-        {
-            public DynamicFormValidator()
-            {
-                RuleForEach(vm => vm.FieldViewModels)
-                    .Must(fieldViewModel => fieldViewModel.Validate());
 
-            }
-        }
     }
 }

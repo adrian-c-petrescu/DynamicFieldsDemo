@@ -1,9 +1,10 @@
 ﻿@model DynamicFieldsDemo.Code.ViewModels.TextFieldViewModel
+@using DynamicFieldsDemo.Code.MvcExtensions
 
 <div class="col-sm-6">
     <label>@Model.Label</label>
     <div class="input-group input-group-lg">
-        @Html.TextBoxFor(m => m.Value);
-        @Html.ValidationMessageFor(m => m.Value, "Field not valid");
+        @Html.EditorWithCustomValidation(Model)
+        @Html.ValidationMessage(Model.Key)
     </div>
 </div>

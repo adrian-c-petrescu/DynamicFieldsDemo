@@ -5,6 +5,7 @@ using DynamicFieldsDemo.Code.Model;
 using DynamicFieldsDemo.Code.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
 using System.Text;
 using System.Web;
@@ -31,30 +32,32 @@ namespace DynamicFieldsDemo.Controllers
 
         // GET: RegForm
         public ActionResult Index(string formId)
-        {
+        {           
             var viewModel = new DynamicFormViewModel();
 
-            //var formFields = _regFormLogic.GetFields(formId);
-
-            //var viewModels = formFields.Select(GetViewModelFromField).ToList();
-            //viewModels.ForEach(vm => vm.LoadExtraViewData(_fieldDataVisitor));
+            foreach (var vm in viewModel.FieldViewModels)
+                vm.LoadExtraViewData(_fieldDataVisitor);
 
             return View(viewModel);
         }
 
         [HttpPost]
-        public ActionResult Post(FormCollection form)
+        public ActionResult Post(
+            [ModelBinder(typeof(DynFormModelBinder))]
+            DynamicFormViewModel viewModel)
         {
-            var keys = form.Cast<string>().ToList();
+			if (!ModelState.IsValid)
+				return RedirectToAction("Index");
+				//return View(viewModel);
 
-            var builder = new StringBuilder();
-            var model = string.Join("; ", keys.Select(k => string.Format("{0} = {1}", k, form[k])));
+			var model = viewModel.ToString();
+
 
             return View("Result", (object)model);
         }
 
 
-        public static AbstractFieldViewModel GetViewModelFromField(AbstractField field, Dictionary<string, string> storage)
+        public static AbstractFieldViewModel GetViewModelFromField(AbstractField field)
         {
             AbstractFieldViewModel vm = null;
 
@@ -68,7 +71,6 @@ namespace DynamicFieldsDemo.Controllers
             if (vm == null)
                 throw new Exception("not supported");
 
-            vm.Storage = storage;
             return vm;
         }
 

@@ -11,14 +11,47 @@ namespace DynamicFieldsDemo.Code.MvcExtensions
 {
 	public static class MvcExtensions
 	{
-		public static MvcHtmlString EditorWithCustomValidation(this HtmlHelper htmlHelper, AbstractFieldViewModel model)
+		public static MvcHtmlString EditorWithCustomValidation(
+			this HtmlHelper htmlHelper,
+			AbstractFieldViewModel model)
 		{
-			return htmlHelper.TextBox(model.FieldMetadata.Key, model.Value, model.GetValidationHtmlAttributes());
+			return EditorWithCustomValidation(htmlHelper, model, new { });
 		}
 
-		public static MvcHtmlString DropdownListWithCustomValidation(this HtmlHelper htmlHelper, DropdownFieldViewModel model)
+		public static MvcHtmlString EditorWithCustomValidation(
+			this HtmlHelper htmlHelper,
+			AbstractFieldViewModel model,
+			object htmlAttributes)
 		{
-			return htmlHelper.DropDownList(model.FieldMetadata.Key, model.SelectListItems, model.GetValidationHtmlAttributes());
+			var htmlAttrDictionary = HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes);
+
+			return htmlHelper.TextBox(
+				model.FieldMetadata.Key,
+				model.Value,
+				model.GetValidationHtmlAttributes()
+					.Concat(htmlAttrDictionary)
+					.ToDictionary(kvp => kvp.Key, kvp => kvp.Value));
+		}
+
+		public static MvcHtmlString DropdownListWithCustomValidation(
+			this HtmlHelper htmlHelper,
+			DropdownFieldViewModel model)
+		{
+			return DropdownListWithCustomValidation(htmlHelper, model, new { });
+		}
+
+		public static MvcHtmlString DropdownListWithCustomValidation(
+			this HtmlHelper htmlHelper,
+			DropdownFieldViewModel model, object htmlAttributes)
+		{
+			var htmlAttr = HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes);
+
+			return htmlHelper.DropDownList(
+				model.FieldMetadata.Key,
+				model.SelectListItems,
+				model.GetValidationHtmlAttributes()
+					.Concat(htmlAttr)
+					.ToDictionary(kvp => kvp.Key, kvp => kvp.Value));
 		}
 	}
 }

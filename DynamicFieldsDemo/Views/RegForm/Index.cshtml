@@ -11,17 +11,19 @@
 
 @using( Html.BeginForm("Post", "RegForm", FormMethod.Post))
 { 
-	@Html.Hidden("formId", Model.FormId)
+	<div class="form-horizontal">
+		@Html.Hidden("formId", Model.FormId)
 
-    <div class="container">
-        @foreach (var field in Model.FieldViewModels) 
-        { 
-            @Html.Partial(field.ViewName, field);
-        }
-        <div class="col-sm-12">
-            <input type="submit" class="btn btn-block btn-primary" /> 
-        </div>
-    </div>
+		@foreach (var field in Model.FieldViewModels) 
+		{ 
+			@Html.Partial(field.ViewName, field);
+		}
+		<div class="form-group">
+			<div class="col-md-offset-2 col-md-10">
+				<input type="submit" class="btn btn-block btn-primary" /> 
+			</div>
+		</div>
+	</div>
 
 }
 

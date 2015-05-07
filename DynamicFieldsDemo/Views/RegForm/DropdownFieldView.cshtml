@@ -1,11 +1,10 @@
 ﻿@model DynamicFieldsDemo.Code.ViewModels.DropdownFieldViewModel
 @using DynamicFieldsDemo.Code.MvcExtensions
 
-<div class="col-sm-6">
-    <label>@Model.FieldMetadata.Label</label>
-    <div class="input-group input-group-lg">
-        @Html.DropdownListWithCustomValidation(Model)
-        @Html.ValidationMessage(Model.FieldMetadata.Key)
-
+<div class="form-group">
+    @Html.Label(Model.FieldMetadata.Label, Model.FieldMetadata.Label, new { @class = "col-md-2" })
+    <div class="col-md-10">
+        @Html.DropdownListWithCustomValidation(Model, new { @class = "form-control" })
+        @Html.ValidationMessage(Model.FieldMetadata.Key, "", new { @class ="text-danger" })
     </div>
 </div>

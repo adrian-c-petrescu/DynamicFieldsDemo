@@ -77,7 +77,8 @@ namespace DynamicFieldsDemo.Code.Logic
 
 		public RegexCustomValidator(string str)
 		{
-			_regexPattern = str.Split(' ')[1];
+			var firstSpaceIdx = str.IndexOf(' ');
+			_regexPattern = str.Substring(firstSpaceIdx + 1);
 		}
 
 		public override bool IsValid(string value)
